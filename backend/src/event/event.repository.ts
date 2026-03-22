@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
@@ -6,7 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 import { CreateEventDto } from './dto/create-event-dto';
 import { UpdateEventDto } from './dto/update-event-dto';
-import { Event } from '../../generated/prisma';
+import { Event } from '@prisma/client';
 
 @Injectable()
 export class EventRepository {
@@ -22,7 +23,7 @@ export class EventRepository {
     return await this.prismaService.event.findMany();
   }
 
-  async findOne(id: number): Promise<Event> {
+  async findOne(id: number): Promise<Event | null> {
     return await this.prismaService.event.findUnique({
       where: { id },
     });

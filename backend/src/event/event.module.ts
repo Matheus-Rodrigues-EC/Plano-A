@@ -8,6 +8,6 @@ import { EventRepository } from './event.repository';
   imports: [PrismaModule],
   providers: [EventService, EventRepository],
   controllers: [EventController],
-  exports: [EventService],
+  exports: [EventService, EventRepository],
 })
 export class EventModule {}

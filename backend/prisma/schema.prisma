@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../generated/prisma"
 }
 
 datasource db {
@@ -15,15 +14,15 @@ datasource db {
 }
 
 model Event {
-  id        Int      @id @default(autoincrement())
-  nome      String   @db.VarChar(150)
-  data      DateTime
-  local     String   @db.VarChar(150)
-  descricao String?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(150)
+  data        DateTime
+  local       String   @db.VarChar(150)
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  @@map("event")
-  @@index([nome])
+  @@index([name])
   @@index([data])
+  @@map("event")
 }

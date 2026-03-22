@@ -13,7 +13,7 @@ export class PrismaService
     const prismaPg = new PrismaPg({
       connectionString: process.env.DATABASE_URL,
     });
-    super({ prismaPg });
+    super({ adapter: prismaPg });
   }
 
   async onModuleInit() {

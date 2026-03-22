@@ -16,6 +16,12 @@ import { UpdateEventDto } from './dto/update-event-dto';
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
+  @Get('health')
+  @HttpCode(200)
+  health() {
+    return this.eventService.getHealthEventService();
+  }
+
   @Get()
   @HttpCode(200)
   findAll() {
