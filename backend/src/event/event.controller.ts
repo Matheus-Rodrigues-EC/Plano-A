@@ -30,8 +30,8 @@ export class EventController {
 
   @Get(':id')
   @HttpCode(200)
-  findOne(@Param('id') id: number) {
-    return this.eventService.findOne(id);
+  findOne(@Param('id') id: string) {
+    return this.eventService.findOne(Number(id));
   }
 
   @Post()
@@ -42,13 +42,14 @@ export class EventController {
 
   @Patch(':id')
   @HttpCode(202)
-  update(@Param('id') id: number, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventService.update(id, updateEventDto);
+  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
+    console.log('Updating event with ID:', id, typeof id);
+    return this.eventService.update(Number(id), updateEventDto);
   }
 
   @Delete(':id')
   @HttpCode(202)
-  remove(@Param('id') id: number) {
-    return this.eventService.remove(id);
+  remove(@Param('id') id: string) {
+    return this.eventService.remove(Number(id));
   }
 }
