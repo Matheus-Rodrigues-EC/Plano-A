@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -22,6 +21,7 @@ export class PrismaService
     console.log('Connecting to database...');
     await this.$connect();
     console.log('Connected to database!');
+    console.log('Initialization time:', new Date());
   }
 
   async onModuleDestroy() {
