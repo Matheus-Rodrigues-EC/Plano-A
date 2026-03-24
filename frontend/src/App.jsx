@@ -1,6 +1,7 @@
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import React, { useEffect } from "react";
+import { Col } from "antd";
 // import { useState } from 'react'
 import Home from "./pages/Home";
 import CreateEvent from "./pages/CreateEvent";

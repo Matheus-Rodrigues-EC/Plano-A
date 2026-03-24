@@ -13,19 +13,27 @@ const Home = () => {
     <PageContainer>
       <Col span={24} style={{ textAlign: "center", marginTop: "10vh" }}>
         <Row justify="center">
-          <Col>
             <Typography.Title
               level={1}
-              style={{ color: "silver", fontSize: "4vw" }}
+              style={{ color: "silver", fontSize: "4rem" }}
             >
-              Plano A
+              Plano{" "}
+              <Typography.Text
+                level={1}
+                style={{
+                  color: "silver",
+                  fontSize: "5rem",
+                  fontFamily: "Momo Signature, cursive",
+                }}
+              >
+                A
+              </Typography.Text>
             </Typography.Title>
-          </Col>
         </Row>
         <Row justify="center">
           <Col>
             <Typography.Text style={{ color: "gray" }}>
-              <Typography.Text style={{ fontWeight: 800, color: "gray" }}>
+              <Typography.Text style={{ fontWeight: 800, color: "#9946ff" }}>
                 Organize
               </Typography.Text>{" "}
               fácil.
@@ -36,11 +44,18 @@ const Home = () => {
           <Col>
             <Typography.Text style={{ color: "gray" }}>
               Transformando{" "}
-              <Typography.Text style={{ fontWeight: 800, color: "gray" }}>
+              <Typography.Text style={{ fontWeight: 800, color: "#9946ff" }}>
                 datas
               </Typography.Text>{" "}
-              em momentos{" "}
-              <Typography.Text style={{ fontWeight: 800, color: "gray" }}>
+              em
+            </Typography.Text>
+          </Col>
+        </Row>
+        <Row justify="center">
+          <Col>
+            <Typography.Text style={{ color: "gray" }}>
+              momentos{" "}
+              <Typography.Text style={{ fontWeight: 800, color: "#9946ff" }}>
                 inesquecíveis.
               </Typography.Text>
             </Typography.Text>
