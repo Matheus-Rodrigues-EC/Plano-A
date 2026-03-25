@@ -60,13 +60,13 @@ A tabela `events` foi criada para armazenar os dados dos eventos cadastrados no 
 Campos principais:
 
 ```sql
-  `id `: INTEGER / SERIAL, chave primária             | identificador único do evento
-  `name `: VARCHAR(150), obrigatório                  | nome do evento
-  `date `: TIMESTAMP, obrigatório                     | data e horário do evento
-  `local `: VARCHAR(150), obrigatório                 | local do evento
-  `description `: TEXT, opcional                      | descrição complementar
-  `created_at `: TIMESTAMP, padrão CURRENT_TIMESTAMP  | data de criação do registro
-  `updated_at `: TIMESTAMP, atualização automática    | data da última atualização
+  `id`: INTEGER / SERIAL, chave primária             | identificador único do evento
+  `name`: VARCHAR(150), obrigatório                  | nome do evento
+  `date`: TIMESTAMP, obrigatório                     | data e horário do evento
+  `location`: VARCHAR(150), obrigatório              | local do evento
+  `description`: TEXT, opcional                      | descrição complementar
+  `created_at`: TIMESTAMP, padrão CURRENT_TIMESTAMP  | data de criação do registro
+  `updated_at`: TIMESTAMP, atualização automática    | data da última atualização
 ```
 
 ### Justificativas das escolhas
@@ -93,7 +93,7 @@ O campo `id` foi definido como chave primária com auto incremento, garantindo u
 ```text
   backend/
   ├── prisma/
-  │   ├── schema.prisma/
+  │   ├── schema.prisma
   ├── src/
   │   ├── event/
   │   │   ├── dto/
@@ -115,21 +115,29 @@ O campo `id` foi definido como chave primária com auto incremento, garantindo u
   └── tsconfig.json
 ```
 
-| Aqui, a entidade representa o modelo conceitual do sistema, enquanto o Prisma é responsável pelo mapeamento físico.
+> A entidade representa o modelo conceitual do sistema, enquanto o Prisma é responsável pelo mapeamento físico.
 
 ```text
   frontend/
   ├── src/
   │   ├── components/
-  │   │   ├── AppHeader/index.jsx
-  │   │   ├── EventCard.jsx/index.jsx
-  │   │   ├── EventForm.jsx/index.jsx
-  │   │   └── PageContainer.jsx/index.jsx
+  │   │   ├── AppHeader/
+  │   │   │    └── index.jsx
+  │   │   ├── EventCard.jsx/
+  │   │   │    └── index.jsx
+  │   │   ├── EventForm.jsx/
+  │   │   │    └── index.jsx
+  │   │   └── PageContainer.jsx/
+  │   │   │    └── index.jsx
   │   ├── pages/
-  │   │   ├── Home/index.jsx
-  │   │   ├── EventsList/index.jsx
-  │   │   ├── CreateEvent/index.jsx
-  │   │   └── EditEvent/index.jsx
+  │   │   ├── Home/
+  │   │   │    └── index.jsx
+  │   │   ├── EventsList/
+  │   │   │    └── index.jsx
+  │   │   ├── CreateEvent/
+  │   │   │    └── index.jsx
+  │   │   └── EditEvent/
+  │   │   │    └── index.jsx
   │   ├── services/
   │   │   └── api.js
   │   ├── routes/
@@ -168,4 +176,80 @@ A navegação do sistema começa na tela inicial. A partir dela, o usuário pode
 
 Os arquivos do wireframe e do sitemap estão disponíveis na pasta `wireframe/`.
 
+---
+
 ## 👨🏻‍🏫 Como Executar
+
+### 🔧 Pré-requisitos
+
+- Node.js instalado
+- PostgreSQL instalado e rodando
+- Gerenciador de pacotes (npm ou yarn)
+
+---
+
+### 🗄️ Banco de Dados
+
+1. Crie um banco PostgreSQL
+2. Configure o arquivo `.env` no backend:
+
+```env
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/plano_a"
+```
+
+3. Execute as migrations com Prisma:
+
+```bash
+  cd backend
+  npx prisma migrate dev
+```
+
+---
+
+### 🚀 Backend
+
+```bash
+  cd backend
+  npm install
+  npm run start:dev
+```
+
+Servidor disponível em:
+
+```bash
+  http://localhost:3000
+```
+
+---
+
+### 💻 Frontend
+
+```bash
+  cd frontend
+  npm install
+  npm run dev
+```
+
+Aplicação disponível em:
+
+```bash
+  http://localhost:5173
+```
+
+---
+
+### 🎥 Vídeo Explicativo
+
+O vídeo explicativo do projeto pode ser acessado no link abaixo:
+
+🔗 [Link do vídeo]()
+
+
+---
+
+
+## 📌 Considerações Finais
+
+Este projeto foi desenvolvido com foco na aplicação prática dos conceitos de Programação Orientada a Objetos, Banco de Dados e Interface Humano-Computador.
+
+Foram aplicados princípios como separação de responsabilidades, reutilização de componentes e organização em camadas, buscando manter o código limpo, escalável e de fácil manutenção.
