@@ -1,16 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useParams } from "react-router";
 import { Typography, Row, Col } from "antd";
 
 import PageContainer from "../../components/PageContainer";
 import AppHeader from "../../components/AppHeader";
+import EventForm from "../../components/EventForm";
 
-const EditEvent = () => {
+const EditEvent = ({ eventId }) => {
+  const { id } = useParams();
+  useEffect(() => {}, [eventId]);
+
   return (
     <PageContainer>
       <AppHeader />
       <Col span={24} style={{ textAlign: "center" }}>
         <Row justify="center">
-          <Typography.Text 
+          <Typography.Text
             style={{
               color: "silver",
               marginTop: "5vh",
@@ -31,7 +36,7 @@ const EditEvent = () => {
           }}
         >
           <Col span={24}>
-            <EventForm />
+            <EventForm eventId={id} />
           </Col>
         </Row>
       </Col>

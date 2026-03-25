@@ -1,28 +1,120 @@
-import React from "react";
-import { Typography, Row, Col, Form, notification, Input, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Row, Col, Form, notification, Input, Button } from "antd";
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router";
+import dayjs from "dayjs";
 
-const EventForm = () => {
+const EventForm = ({ eventId }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+  const [loading, setLoading] = useState(false);
+
+  const getEditEvent = async (eventId) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`/api/event/${eventId}`);
+      // console.log("Fetched event data:", response.data);
+      form.setFieldsValue({
+        eventName: response.data.name,
+        eventDate: dayjs(response.data.date).format("YYYY-MM-DD"),
+        eventLocation: response.data.location,
+        eventDescription: response.data.description,
+      });
+    } catch (err) {
+      console.error("Error fetching event data:", err);
+      api.error({
+        message: "Erro ao carregar evento",
+        description:
+          "Não foi possível carregar os dados do evento para edição. Por favor, tente novamente.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createEvent = async (eventData) => {
+    setLoading(true);
+    try {
+      // console.log("Creating event with data:", eventData);
+      await axios.post("/api/event", eventData);
+      api.success({
+        message: "Evento criado",
+        description: `Evento "${eventData.name}" criado com sucesso!`,
+      });
+      form.resetFields();
+      navigate("/events");
+    } catch (err) {
+      console.error("Error creating event:", err);
+      api.error({
+        message: "Erro ao criar evento",
+        description:
+          "Não foi possível criar o evento. Por favor, verifique os dados e tente novamente.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateEvent = async (eventId, eventData) => {
+    setLoading(true);
+    try {
+      // console.log("Updating event with data:", eventData);
+      await axios.patch(`/api/event/${eventId}`, eventData);
+      api.success({
+        message: "Evento atualizado",
+        description: `Evento "${eventData.name}" atualizado com sucesso!`,
+      });
+      form.resetFields();
+      navigate("/events");
+    } catch (err) {
+      console.error("Error updating event:", err);
+      api.error({
+        message: "Erro ao atualizar evento",
+        description:
+          "Não foi possível atualizar o evento. Por favor, verifique os dados e tente novamente.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const onFinish = (values) => {
-    console.log("Success:", values);
-    api.success({
-      message: "Evento criado",
-      description: `Evento "${values.eventName}" criado com sucesso!`,
-    });
-    form.resetFields();
+    if (eventId) {
+      const eventData = {
+        name: values.eventName,
+        date: dayjs(values.eventDate).toISOString(),
+        location: values.eventLocation,
+        description: values.eventDescription,
+      };
+      updateEvent(eventId, eventData);
+      return;
+    }
+    const eventData = {
+      name: values.eventName,
+      date: dayjs(values.eventDate).toISOString(),
+      location: values.eventLocation,
+      description: values.eventDescription,
+    };
+    createEvent(eventData);
   };
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = (errorInfo, values) => {
     console.log("Failed:", errorInfo);
+    console.log("Form values on failure:", values);
     api.error({
-      message: "Erro ao cadastrar evento",
+      message: "Erro no formulário",
       description: "Por favor, preencha todos os campos corretamente.",
     });
   };
+
+  useEffect(() => {
+    // console.log("EventForm mounted with eventId:", eventId);
+    if (eventId) {
+      getEditEvent(eventId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Col span={24} style={{ textAlign: "center" }}>
@@ -32,6 +124,7 @@ const EventForm = () => {
         form={form}
         name="eventForm"
         layout="vertical"
+        loading={loading ? "true" : "false"}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         style={{
@@ -64,9 +157,17 @@ const EventForm = () => {
               required: true,
               message: "Por favor, selecione a data do evento!",
             },
+            {
+              validator: (_, value) => {
+                if (value && dayjs(value).isBefore(dayjs(), 'day')) {
+                  return Promise.reject(new Error('A data do evento não pode ser no passado!'));
+                }
+                return Promise.resolve();
+              },
+            },
           ]}
         >
-          <Input type="date" style={{ width: "100%" }} />
+          <Input type="date" style={{ width: "100%" }} min={dayjs().format('YYYY-MM-DD')} />
         </Form.Item>
 
         <Form.Item
@@ -84,7 +185,7 @@ const EventForm = () => {
           name="eventDescription"
           rules={[
             {
-              required: true,
+              required: false,
               message: "Por favor, insira a descrição do evento!",
             },
           ]}
@@ -95,10 +196,6 @@ const EventForm = () => {
             placeholder="Descrição do Evento"
           />
         </Form.Item>
-
-        {/* <Form.Item>
-          <Button type="default">Create Event</Button>
-        </Form.Item> */}
       </Form>
 
       <Row
@@ -137,7 +234,7 @@ const EventForm = () => {
           onClick={() => form.submit()}
         >
           <CheckOutlined />
-          Cadastrar Evento
+          {eventId ? "Atualizar" : "Cadastrar"} Evento
         </Button>
       </Row>
     </Col>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Typography, Row, Col } from "antd";
 
 import PageContainer from "../../components/PageContainer";
@@ -6,12 +6,14 @@ import AppHeader from "../../components/AppHeader";
 import EventForm from "../../components/EventForm";
 
 const CreateEvent = () => {
+  useEffect(() => {}, []);
+
   return (
     <PageContainer>
       <AppHeader />
       <Col span={24} style={{ textAlign: "center" }}>
         <Row justify="center">
-          <Typography.Text 
+          <Typography.Text
             style={{
               color: "silver",
               marginTop: "5vh",

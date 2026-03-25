@@ -16,13 +16,13 @@ datasource db {
 model Event {
   id          Int      @id @default(autoincrement())
   name        String   @db.VarChar(150)
-  data        DateTime
-  local       String   @db.VarChar(150)
+  date        DateTime
+  location    String   @db.VarChar(150)
   description String?
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@index([name])
-  @@index([data])
+  @@index([date])
   @@map("event")
 }

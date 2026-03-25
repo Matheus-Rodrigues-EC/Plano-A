@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -20,7 +16,9 @@ export class EventRepository {
   }
 
   async findAll(): Promise<Event[]> {
-    return await this.prismaService.event.findMany();
+    return await this.prismaService.event.findMany({
+      orderBy: { date: 'asc' },
+    });
   }
 
   async findOne(id: number): Promise<Event | null> {
