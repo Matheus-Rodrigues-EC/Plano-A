@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Row, Col, Form, notification, Input, Button } from "antd";
+import * as eventService from "../../services/events";
+import { Row, Col, Form, notification, Input, Button, DatePicker } from "antd";
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
@@ -10,22 +10,32 @@ const EventForm = ({ eventId }) => {
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState(false);
+  const dateFormat = "DD/MM/YYYY";
+  const dataFormatada = dayjs().format("DD/MM/YYYY");
+
+  const disabledDate = (current) => {
+    return current && current < dayjs().startOf("day");
+  };
+
+  const onChange = (date, dateString) => {
+    console.log(date, dateString);
+  };
 
   const getEditEvent = async (eventId) => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/event/${eventId}`);
-      // console.log("Fetched event data:", response.data);
+      const response = await eventService.getEventById(eventId);
+      // console.log("Fetched event data:", response);
       form.setFieldsValue({
-        eventName: response.data.name,
-        eventDate: dayjs(response.data.date).format("YYYY-MM-DD"),
-        eventLocation: response.data.location,
-        eventDescription: response.data.description,
+        eventName: response?.name,
+        eventDate: dayjs(response?.date),
+        eventLocation: response?.location,
+        eventDescription: response?.description,
       });
     } catch (err) {
       console.error("Error fetching event data:", err);
       api.error({
-        message: "Erro ao carregar evento",
+        title: "Erro ao carregar evento",
         description:
           "Não foi possível carregar os dados do evento para edição. Por favor, tente novamente.",
       });
@@ -38,9 +48,10 @@ const EventForm = ({ eventId }) => {
     setLoading(true);
     try {
       // console.log("Creating event with data:", eventData);
-      await axios.post("/api/event", eventData);
+      // await axios.post("/api/event", eventData);
+      await eventService.createEvent(eventData);
       api.success({
-        message: "Evento criado",
+        title: "Evento criado",
         description: `Evento "${eventData.name}" criado com sucesso!`,
       });
       form.resetFields();
@@ -48,7 +59,7 @@ const EventForm = ({ eventId }) => {
     } catch (err) {
       console.error("Error creating event:", err);
       api.error({
-        message: "Erro ao criar evento",
+        title: "Erro ao criar evento",
         description:
           "Não foi possível criar o evento. Por favor, verifique os dados e tente novamente.",
       });
@@ -61,9 +72,9 @@ const EventForm = ({ eventId }) => {
     setLoading(true);
     try {
       // console.log("Updating event with data:", eventData);
-      await axios.patch(`/api/event/${eventId}`, eventData);
+      await eventService.updateEvent(eventId, eventData);
       api.success({
-        message: "Evento atualizado",
+        title: "Evento atualizado",
         description: `Evento "${eventData.name}" atualizado com sucesso!`,
       });
       form.resetFields();
@@ -71,7 +82,7 @@ const EventForm = ({ eventId }) => {
     } catch (err) {
       console.error("Error updating event:", err);
       api.error({
-        message: "Erro ao atualizar evento",
+        title: "Erro ao atualizar evento",
         description:
           "Não foi possível atualizar o evento. Por favor, verifique os dados e tente novamente.",
       });
@@ -99,11 +110,11 @@ const EventForm = ({ eventId }) => {
     };
     createEvent(eventData);
   };
-  const onFinishFailed = (errorInfo, values) => {
+
+  const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
-    console.log("Form values on failure:", values);
     api.error({
-      message: "Erro no formulário",
+      title: "Erro no formulário",
       description: "Por favor, preencha todos os campos corretamente.",
     });
   };
@@ -124,11 +135,11 @@ const EventForm = ({ eventId }) => {
         form={form}
         name="eventForm"
         layout="vertical"
-        loading={loading ? "true" : "false"}
+        disabled={loading}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         style={{
-          maxWidth: "80%px",
+          maxWidth: "100%",
           margin: "0 auto",
           padding: "20px",
           backgroundColor: "rgba(255, 255, 255, 0.8)",
@@ -146,7 +157,11 @@ const EventForm = ({ eventId }) => {
             },
           ]}
         >
-          <Input style={{ width: "100%" }} placeholder="Nome do evento" />
+          <Input
+            style={{ width: "100%" }}
+            placeholder="Nome do evento"
+            allowClear
+          />
         </Form.Item>
 
         <Form.Item
@@ -157,17 +172,16 @@ const EventForm = ({ eventId }) => {
               required: true,
               message: "Por favor, selecione a data do evento!",
             },
-            {
-              validator: (_, value) => {
-                if (value && dayjs(value).isBefore(dayjs(), 'day')) {
-                  return Promise.reject(new Error('A data do evento não pode ser no passado!'));
-                }
-                return Promise.resolve();
-              },
-            },
           ]}
         >
-          <Input type="date" style={{ width: "100%" }} min={dayjs().format('YYYY-MM-DD')} />
+          <DatePicker
+            format={dateFormat}
+            style={{ width: "100%" }}
+            placeholder={dataFormatada}
+            onChange={onChange}
+            allowClear
+            disabledDate={disabledDate}
+          />
         </Form.Item>
 
         <Form.Item
@@ -177,7 +191,11 @@ const EventForm = ({ eventId }) => {
             { required: true, message: "Por favor, insira o local do evento!" },
           ]}
         >
-          <Input style={{ width: "100%" }} placeholder="Local do Evento" />
+          <Input
+            style={{ width: "100%" }}
+            placeholder="Local do Evento"
+            allowClear
+          />
         </Form.Item>
 
         <Form.Item
@@ -194,27 +212,24 @@ const EventForm = ({ eventId }) => {
             style={{ width: "100%" }}
             rows={5}
             placeholder="Descrição do Evento"
+            allowClear
           />
         </Form.Item>
       </Form>
 
-      <Row
-        justify="center"
-        gutter={16}
-        style={{ marginTop: "20px" }}
-        type="flex"
-      >
+      <Row justify="space-between" style={{ marginTop: "20px" }} type="flex">
         <Button
           type="default"
-          size="default"
+          size="small"
           style={{
-            margin: "auto",
             width: "auto",
             borderRadius: "5px",
             borderColor: "#e1a501",
             color: "#e1a501",
             fontWeight: "semi-bold",
           }}
+          disabled={loading}
+          loading={loading}
           onClick={() => navigate("/events")}
         >
           <CloseOutlined />
@@ -222,15 +237,16 @@ const EventForm = ({ eventId }) => {
         </Button>
         <Button
           type="default"
-          size="default"
+          size="small"
           style={{
-            margin: "auto",
             width: "auto",
             borderRadius: "5px",
             borderColor: "#00bd00",
             color: "#00bd00",
             fontWeight: "semi-bold",
           }}
+          disabled={loading}
+          loading={loading}
           onClick={() => form.submit()}
         >
           <CheckOutlined />

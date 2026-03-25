@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import {
   Typography,
@@ -10,8 +10,7 @@ import {
   message,
   Popconfirm,
 } from "antd";
-// import { createStyles } from "antd-style";
-import axios from "axios";
+import * as eventService from "../../services/events";
 import dayjs from "dayjs";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
@@ -21,19 +20,23 @@ const stylesCard = {
   },
 };
 
-const EventCard = ({ event, setEventIdControl }) => {
+const EventCard = ({ event, fetchEvents }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const deleteEvent = async (eventId) => {
     try {
+      setLoading(true);
       // console.log("Deleting event with ID:", eventId);
-      await axios.delete(`/api/event/${eventId}`);
+      await eventService.deleteEvent(eventId);
       message.success("Evento deletado com sucesso");
-      setEventIdControl(null); // Reset the control state to trigger re-fetching of events
       navigate("/events");
     } catch (err) {
       console.error("Error deleting event:", err);
       message.error("Erro ao deletar evento. Por favor, tente novamente.");
+    } finally {
+      setLoading(false);
+      fetchEvents(); // Re-fetch events after deletion to update the <list></list>
     }
   };
 
@@ -50,7 +53,7 @@ const EventCard = ({ event, setEventIdControl }) => {
   return (
     <Card
       style={{
-        backgroundColor: "#ffffff8f",
+        backgroundColor: "#ffffffe7",
         borderRadius: "8px",
         width: "100%",
       }}
@@ -60,17 +63,23 @@ const EventCard = ({ event, setEventIdControl }) => {
       <Row type="flex" justify="space-between" style={{ marginBottom: "1rem" }}>
         <Col span={16} style={{ textAlign: "center" }}>
           <Row justify="start">
-            <Typography.Text style={{ fontWeight: 500, color: "#1b003b" }}>
+            <Typography.Text style={{ fontWeight: 500, fontSize: "1.5rem", color: "#1b003b" }}>
               {event.name}
             </Typography.Text>
           </Row>
           <Row justify="space-between">
-            <Typography.Text type="secondary" style={{ fontWeight: 500, color: "#1b003bb2" }}>
+            <Typography.Text
+              type="secondary"
+              style={{ fontWeight: 500, fontSize: "1.15rem", color: "#1b003bb2" }}
+            >
               {event.location}
             </Typography.Text>
             {/* </Row>
           <Row justify="start" style={{ marginTop: "0.5rem" }}> */}
-            <Typography.Text type="secondary" style={{ fontWeight: 500, color: "#1b003bb2" }}>
+            <Typography.Text
+              type="secondary"
+              style={{ fontWeight: 500, fontSize: "1.15rem", color: "#1b003bb2" }}
+            >
               {dayjs(event.date).format("DD/MM/YYYY")}
             </Typography.Text>
           </Row>
@@ -84,7 +93,10 @@ const EventCard = ({ event, setEventIdControl }) => {
                   marginTop: "0.15rem",
                   backgroundColor: "#d5e401",
                   color: "#000",
+                  borderColor: "#1b003b",
                 }}
+                disabled={loading}
+                loading={loading}
                 onClick={() => navigate(`/events/edit/${event.id}`)}
               >
                 <EditOutlined />
@@ -107,8 +119,10 @@ const EventCard = ({ event, setEventIdControl }) => {
                     marginTop: "0.5rem",
                     backgroundColor: "#ca1010",
                     color: "#000",
+                    borderColor: "#1b003b",
                   }}
-                  onClick={() => setEventIdControl(event.id)}
+                  disabled={loading}
+                  loading={loading}
                 >
                   <DeleteOutlined />
                 </Button>
@@ -117,11 +131,14 @@ const EventCard = ({ event, setEventIdControl }) => {
           </Row>
         </Col>
         <Row justify="start" style={{ marginTop: "0.5rem" }}>
-          <Typography.Text style={{ fontWeight: 500, color: "#1b003bb2" }}>
+          <Typography.Text style={{ fontWeight: 500, fontSize: "1rem", color: "#1b003bb2" }}>
             {event.description ? (
               event.description
             ) : (
-              <Typography.Text type="secondary" style={{ fontWeight: 500, color: "#1b003bb2" }}>
+              <Typography.Text
+                type="secondary"
+                style={{ fontWeight: 500, color: "#1b003bb2" }}
+              >
                 Sem descrição cadastrada.
               </Typography.Text>
             )}

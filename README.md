@@ -92,6 +92,8 @@ O campo `id` foi definido como chave primária com auto incremento, garantindo u
 
 ```text
   backend/
+  ├── prisma/
+  │   ├── schema.prisma/
   ├── src/
   │   ├── event/
   │   │   ├── dto/
@@ -101,27 +103,37 @@ O campo `id` foi definido como chave primária com auto incremento, garantindo u
   │   │   │   └── event.entity.ts
   │   │   ├── event.controller.ts
   │   │   ├── event.service.ts
+  │   │   ├── event.repository.ts
   │   │   └── event.module.ts
+  │   ├── prisma
+  │   │   ├── prisma.controller.ts/
+  │   │   ├── prisma.service.ts/
+  │   │   └── prisma.module.ts
   │   ├── app.module.ts
   │   └── main.ts
   ├── package.json
   └── tsconfig.json
 ```
 
+| Aqui, a entidade representa o modelo conceitual do sistema, enquanto o Prisma é responsável pelo mapeamento físico.
+
 ```text
   frontend/
   ├── src/
   │   ├── components/
-  │   │   ├── EventForm.jsx
-  │   │   ├── EventCard.jsx
-  │   │   └── Header.jsx
+  │   │   ├── AppHeader/index.jsx
+  │   │   ├── EventCard.jsx/index.jsx
+  │   │   ├── EventForm.jsx/index.jsx
+  │   │   └── PageContainer.jsx/index.jsx
   │   ├── pages/
-  │   │   ├── Home.jsx
-  │   │   ├── EventsList.jsx
-  │   │   ├── CreateEvent.jsx
-  │   │   └── EditEvent.jsx
+  │   │   ├── Home/index.jsx
+  │   │   ├── EventsList/index.jsx
+  │   │   ├── CreateEvent/index.jsx
+  │   │   └── EditEvent/index.jsx
   │   ├── services/
-  │   │   └── api.ts
+  │   │   └── api.js
+  │   ├── routes/
+  │   │   └── index.jsx
   │   ├── App.jsx
   │   └── main.jsx
 ```
