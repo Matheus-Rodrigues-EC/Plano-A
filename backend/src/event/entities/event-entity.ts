@@ -10,16 +10,16 @@ export class EventEntity {
   constructor(
     id: number,
     name: string,
-    data: Date,
-    local: string,
+    date: Date,
+    location: string,
     description: string,
     created_at: Date,
     updated_at: Date,
   ) {
     this.id = id;
     this.name = name;
-    this.data = data;
-    this.local = local;
+    this.data = date;
+    this.local = location;
     this.description = description;
     this.created_at = created_at;
     this.updated_at = updated_at;
