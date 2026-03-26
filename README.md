@@ -285,7 +285,7 @@ Aplicação disponível em:
 
 O vídeo explicativo do projeto pode ser acessado no link abaixo:
 
-🔗 [Link do vídeo]()
+🔗 [Link do vídeo](https://youtu.be/zqzVwyS7yso)
 
 ---
 
