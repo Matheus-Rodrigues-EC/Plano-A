@@ -1,4 +1,25 @@
-# Plano-A
+<h1 align="center" fontsize="24px">
+  Plano A
+</h1>
+
+<div align="center">
+<span>
+<strong>Organize</strong> fácil. 
+</span>
+</br>
+<span style="justify-content: center">
+Transforme <strong>datas</strong> em 
+</span>
+</br>
+<span style="justify-content: center">
+momentos <strong>inesquecíveis</strong>.
+</span>
+</br>
+</br>
+<span>
+Agende e celebre.
+</span>
+</div>
 
 ## 📜 Descrição do Projeto
 
@@ -69,9 +90,30 @@ Campos principais:
   `updated_at`: TIMESTAMP, atualização automática    | data da última atualização
 ```
 
+```sql
+  CREATE TABLE events (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    location VARCHAR(150) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+  -- Índices
+  CREATE INDEX idx_events_name ON events(name);
+  CREATE INDEX idx_events_date ON events(date);
+```
+
 ### Justificativas das escolhas
 
-O campo `id` foi definido como chave primária com auto incremento, garantindo unicidade. Os campos `nome`, `data` e `local` foram definidos como obrigatórios por serem essenciais para o cadastro. O campo `descricao` foi definido como texto livre para permitir maior flexibilidade. Também foram criados índices nos campos `nome` e `data` para melhor organização e possível otimização de consultas.
+- O campo `id` foi definido como chave primária com auto incremento, garantindo unicidade.
+- Os campos `name`, `date` e `location` foram definidos como obrigatórios por serem essenciais para o cadastro.
+- O campo `description` foi definido como texto livre para permitir maior flexibilidade.
+- O tipo `TIMESTAMP` foi utilizado para permitir armazenar data e horário do evento, possibilitando maior precisão no agendamento, caso seja necessário.
+- O campo description utiliza `TEXT` para permitir maior flexibilidade no tamanho das informações.
+- Também foram criados índices nos campos `name` e `date` para melhor organização e possível otimização de consultas.
 
 ### 📁 Estrutura de pastas
 
@@ -148,7 +190,8 @@ O campo `id` foi definido como chave primária com auto incremento, garantindo u
 
 ## 🗺️ Wireframe e Sitemap
 
-O wireframe foi desenvolvido para representar as principais telas do sistema e o fluxo de navegação entre elas.
+O wireframe foi projetado com foco em simplicidade e usabilidade, permitindo que o usuário execute as ações principais (CRUD) com o menor número de cliques possível.
+A navegação foi centralizada em ações claras como "Cadastrar Evento" e "Listar Eventos", reduzindo a complexidade cognitiva.
 
 ### 🎨 Telas desenvolvidas
 
@@ -244,9 +287,7 @@ O vídeo explicativo do projeto pode ser acessado no link abaixo:
 
 🔗 [Link do vídeo]()
 
-
 ---
-
 
 ## 📌 Considerações Finais
 
